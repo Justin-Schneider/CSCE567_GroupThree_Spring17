@@ -62,14 +62,14 @@
     }
 
     function loadData2() {
-      d3.csv("losses2015_transformed.csv", function (err, data) {
+      d3.csv("/losses2015_transformed.csv", function (err, data) {
         myData = data;
         d3.selectAll("#theseBars").remove();
         createBars(null);
       });
     }
     function loadData2(id) {
-      d3.csv("losses2015_transformed.csv", function (err, data) {
+      d3.csv("/losses2015_transformed.csv", function (err, data) {
         myData = data;
         d3.selectAll("#theseBars").remove();
         createBars(id);
