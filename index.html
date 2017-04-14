@@ -2,10 +2,9 @@
 <html>
 
 <head>
-  <title>Choropleth D3</title>
+  <title>CSCE 567 </title>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
-  <!--<svg preserveAspectRatio="xMidYMid meet"></svg>-->
 
   <style type="text/css">
     svg {
@@ -39,6 +38,9 @@
   <script type="text/javascript">
     loadData();
     loadData2();
+    loadData3();
+    loadData4();
+    
     var myPaths;
     var margin = { top: 10, right: 0, bottom: 30, left: 0 };
     var svgWidth = 800 - margin.left - margin.right;
@@ -61,16 +63,62 @@
       });
     }
 
-    function loadData2() {
-      d3.csv("/losses2015_transformed.csv", function (err, data) {
-        myData = data;
+      // Load LoanStatsAfter
+    function loadData1() {
+      d3.csv("/LoanStatsAfter.csv", function (err, data) {
+        myAcceptedAfter = data;
+        d3.selectAll("#theseBars").remove();
+        createBars(null);
+      });
+    }
+    function loadData1(id) {
+      d3.csv("/LoanStatsAfter.csv", function (err, data) {
+        myAcceptedAfter = data;
+        d3.selectAll("#theseBars").remove();
+        createBars(id);
+      });
+    }
+      // Load LoanStatsBefore
+        function loadData2() {
+      d3.csv("/LoanStatsBefore.csv", function (err, data) {
+        myAcceptedBefore = data;
         d3.selectAll("#theseBars").remove();
         createBars(null);
       });
     }
     function loadData2(id) {
-      d3.csv("/losses2015_transformed.csv", function (err, data) {
-        myData = data;
+      d3.csv("/LoanStatsBefore.csv", function (err, data) {
+        myAcceptedBefore = data;
+        d3.selectAll("#theseBars").remove();
+        createBars(id);
+      });
+    }
+      // Load RejectStatsAfter
+     function loadData3() {
+      d3.csv("/RejectStatsAfter.csv", function (err, data) {
+        myRejectedAfter = data;
+        d3.selectAll("#theseBars").remove();
+        createBars(null);
+      });
+    }
+    function loadData3(id) {
+      d3.csv("/RejectStatsAfter.csv", function (err, data) {
+        myRejectedAfter = data;
+        d3.selectAll("#theseBars").remove();
+        createBars(id);
+      });
+    }
+      // Load RejectStatsBefore
+    function loadData4() {
+      d3.csv("/RejectStatsBefore.csv", function (err, data) {
+        myRejectedBefore = data;
+        d3.selectAll("#theseBars").remove();
+        createBars(null);
+      });
+    }
+    function loadData4(id) {
+      d3.csv("/RejectStatsBefore.csv", function (err, data) {
+        myRejectedBefore = data;
         d3.selectAll("#theseBars").remove();
         createBars(id);
       });
