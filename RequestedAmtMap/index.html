@@ -17,16 +17,13 @@
 	    var margin = { top: 10, right: 0, bottom: 30, left: 0 };
 	    var svgWidth = 800 - margin.left - margin.right;
 	    var svgHeight = 500 - margin.top - margin.bottom;
-
 	    loadData2();
-
 	    function loadData2() {
 	      d3.csv("/CSCE567_GroupThree_Spring17/RequestedAmtMap/requestedCSV.csv", function (err, data) {
 	        myData = data;
 	        amounts = {}
 	        for(i = 0; i < 50; i++){
 	          
-
 	          j = parseInt(myData[i].State_Code);
 	          if(amounts[j] == null){
 	            amounts[j] = 0;
@@ -34,16 +31,12 @@
 	           amounts[j] = parseFloat(amounts[j]) + parseFloat(myData[i].Amount.replace(/,/g , ""));
 	          //amounts[j] = parseFloat(amounts[j]) + parseFloat(myData[i].funded.amnt);
 	        }
-
 	        createChoroplethMap(myData, amounts);
 	      });
 	    }
-
 	    function createChoroplethMap(myData, amounts) {
-
 	      d3.json("us-10m.json", function (json) {
 	        myPaths = json;
-
 	        var svg = d3.select("#map")
 	          .append("svg")
 	          .attr("width", 800)//svgWidth + margin.left + margin.right)
@@ -51,7 +44,6 @@
 	          .append("g")
 	          //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	          .attr("transform", "translate(" + 10 + "," + 10 + ")");
-
 	        var projection = d3.geoAlbersUsa()
 	          .translate([svgWidth / 2, svgHeight / 2])
 	          .scale([1000]);
@@ -89,106 +81,25 @@
 	            console.log(amounts[d.id]);
 	            
 	          });
-
 	      });
 	    }
   </script>
 	</head>
 	<body>
-		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-	<style>
-	.hidden{
-		display:none;
-	}
 
-	#myDIV {
-    	width: 100%;
-    	padding: 50px 0;
-    	text-align: center;
-    	background-color: lightblue;
-    	margin-top:20px;
-	}
-</style>
+	<h1 id="header"> Peer to Peer Loan Stats: Before and After the Recession </h1>
 
-		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<head>
-<style>
-.hidden{
-		display:none;
-}
+	<a class="pure-button pure-button-primary" value="AvgAmtReqBefore">Average Loan Amount Requested: Before</a>
+	<a class="pure-button pure-button-primary" value="AvgAmtReqBefore">Average Loan Amount Requested: After</a>
 
-#myDIV {
-    width: 100%;
-    padding: 50px 0;
-    text-align: center;
-    background-color: lightblue;
-    margin-top:20px;
-}
-</style>
-</head>
-<body>
-<body style ="zoom:1;">
-
-<button class="pure-button" id="m" value="beforeRecc" onclick="function()">Before Reccession</button>
-<button class="pure-button" id="m1" value="afterRecc" onclick="function()">After Reccession</button>
-
-<script>
-$(function() {
-    $( "#m1" ).click(function() {
-        $( "#myDiv" ).toggle();
-    });
-});
-
-$(function() {
-    $( "#m" ).click(function() {
-        $( "#myDiv" ).toggle();
-    });
-});
-</script>
-
-<div id="myDiv" class = "hidden">
-	<button class ="pure-button" id="m" value="avgReq">Average Amount Requested</button>
-	<button class = "pure-button" id="m" value="avgFunded">Average Amount Funded</button>
-</div>
-		
-		
-		
-		
-<!-- 	<h1 id="header"> Peer to Peer Loan Stats: Before and After the Recession </h1>
-
-	<a class="pure-button pure-button-primary" id = "m" value="beforeRecc" onclick="function()">Before Recession</a>
-	<a class="pure-button pure-button-primary" id="m1" value="afterRecc" onclick="function()">After Recession</a>
-
-<!-- 	<a class="pure-button pure-button-primary" value="AvgAmtReqBefore">Average Loan Amount Funded: Before</a>
+	<a class="pure-button pure-button-primary" value="AvgAmtReqBefore">Average Loan Amount Funded: Before</a>
 	<a class="pure-button pure-button-primary" value="AvgAmtReqBefore">Average Loan Amount Funded: After</a>
- -->
-		
-<!-- 		<script>
-$(function() {
-    $( "#m1" ).click(function() {
-        $( "#myDiv" ).toggle();
-    });
-});
 
-$(function() {
-    $( "#m" ).click(function() {
-        $( "#myDiv" ).toggle();
-    });
-});
-</script> -->
 
-<!-- <div id="myDiv" class = "hidden">
-<!-- 	<button id="m" value="avgReq">Average Amount Requested</button> -->
-<!-- 	<a class="pure-button pure-button-primary" id="m" value="avgReq">Average Amount Requested</a> -->
-<!-- 	<button id="m" value="avgFunded">Average Amount Funded</button> -->
-<!-- 	<a class="pure-button pure-button-primary" id="m" value="avgFunded">Average Amount Funded</a>
-</div>
-  -->
   <div id="map" style="float:left" , width: 50%>
   </div>
   <div id="bars" style="float:left">
   </div>
 	</body>
 
-
-
+</html>
