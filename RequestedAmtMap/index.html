@@ -110,16 +110,29 @@
 	}
 </style>
 
-	<h1 id="header"> Peer to Peer Loan Stats: Before and After the Recession </h1>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<head>
+<style>
+.hidden{
+		display:none;
+}
 
-	<a class="pure-button pure-button-primary" id = "m" value="beforeRecc" onclick="function()">Before Recession</a>
-	<a class="pure-button pure-button-primary" id="m1" value="afterRecc" onclick="function()">After Recession</a>
+#myDIV {
+    width: 100%;
+    padding: 50px 0;
+    text-align: center;
+    background-color: lightblue;
+    margin-top:20px;
+}
+</style>
+</head>
+<body>
+<body style ="zoom:1;">
 
-<!-- 	<a class="pure-button pure-button-primary" value="AvgAmtReqBefore">Average Loan Amount Funded: Before</a>
-	<a class="pure-button pure-button-primary" value="AvgAmtReqBefore">Average Loan Amount Funded: After</a>
- -->
-		
-		<script>
+<button class="pure-button" id="m" value="beforeRecc" onclick="function()">Before Reccession</button>
+<button class="pure-button" id="m1" value="afterRecc" onclick="function()">After Reccession</button>
+
+<script>
 $(function() {
     $( "#m1" ).click(function() {
         $( "#myDiv" ).toggle();
@@ -134,17 +147,48 @@ $(function() {
 </script>
 
 <div id="myDiv" class = "hidden">
-<!-- 	<button id="m" value="avgReq">Average Amount Requested</button> -->
-	<a class="pure-button pure-button-primary" id="m" value="avgReq">Average Amount Requested</a>
-<!-- 	<button id="m" value="avgFunded">Average Amount Funded</button> -->
-	<a class="pure-button pure-button-primary" id="m" value="avgFunded">Average Amount Funded</a>
+	<button class ="pure-button" id="m" value="avgReq">Average Amount Requested</button>
+	<button class = "pure-button" id="m" value="avgFunded">Average Amount Funded</button>
 </div>
+		
+		
+		
+		
+<!-- 	<h1 id="header"> Peer to Peer Loan Stats: Before and After the Recession </h1>
 
+	<a class="pure-button pure-button-primary" id = "m" value="beforeRecc" onclick="function()">Before Recession</a>
+	<a class="pure-button pure-button-primary" id="m1" value="afterRecc" onclick="function()">After Recession</a>
+
+<!-- 	<a class="pure-button pure-button-primary" value="AvgAmtReqBefore">Average Loan Amount Funded: Before</a>
+	<a class="pure-button pure-button-primary" value="AvgAmtReqBefore">Average Loan Amount Funded: After</a>
+ -->
+		
+<!-- 		<script>
+$(function() {
+    $( "#m1" ).click(function() {
+        $( "#myDiv" ).toggle();
+    });
+});
+
+$(function() {
+    $( "#m" ).click(function() {
+        $( "#myDiv" ).toggle();
+    });
+});
+</script> -->
+
+<!-- <div id="myDiv" class = "hidden">
+<!-- 	<button id="m" value="avgReq">Average Amount Requested</button> -->
+<!-- 	<a class="pure-button pure-button-primary" id="m" value="avgReq">Average Amount Requested</a> -->
+<!-- 	<button id="m" value="avgFunded">Average Amount Funded</button> -->
+<!-- 	<a class="pure-button pure-button-primary" id="m" value="avgFunded">Average Amount Funded</a>
+</div>
+  -->
   <div id="map" style="float:left" , width: 50%>
   </div>
   <div id="bars" style="float:left">
   </div>
 	</body>
 
-</html>
+
 
