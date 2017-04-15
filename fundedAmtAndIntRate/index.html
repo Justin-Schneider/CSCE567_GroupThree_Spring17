@@ -92,15 +92,15 @@
       document.getElementById("map").innerHTML = "";
       document.getElementById("bars").innerHTML = "";
       if (checkbox.checked) {
-        csvName = "fundedAmtAndIntRate/avgFundedAfterCSV3.csv";
+        csvName = "/avgFundedAfterCSV3.csv";
         loadData2(csvName);
       }
       else {
-        csvName = "fundedAmtAndIntRate/avgFundedBeforeCSV3.csv";
+        csvName = "/avgFundedBeforeCSV3.csv";
         loadData2(csvName);
       }
     }
-    var csvName = "fundedAmtAndIntRate/avgFundedBeforeCSV3.csv";
+    var csvName = "/avgFundedBeforeCSV3.csv";
     var myPaths;
     var margin = { top: 10, right: 0, bottom: 30, left: 0 };
     var svgWidth = 800 - margin.left - margin.right;
