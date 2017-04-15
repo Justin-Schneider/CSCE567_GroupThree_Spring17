@@ -2,10 +2,20 @@
 <html>
 
 <head>
-  <a href="https://justin-schneider.github.io/CSCE567_GroupThree_Spring17/RequestedAmtMap/index.html">RequestedAmtMap</a>
-  <title>CSCE 567 </title>
+  <div>
+    <title>Choropleth D3</title>
+
+    <h3>Recession Toggle</h3>
+    <label class="switch">
+  <input type="checkbox"  onchange="mapSwap(this)">
+  <div class="slider round"></div>
+
+</label>
+  </div>
+
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
+  <!--<svg preserveAspectRatio="xMidYMid meet"></svg>-->
 
   <style type="text/css">
     svg {
@@ -19,134 +29,225 @@
     svg .text {
       fill: black;
     }
-    
-    text {
-      /*transform: scale(1, -1) rotate(90deg);*/
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
     }
     
-    #bars {
-      /*-webkit-transform: rotate(270deg);
-    -moz-transform: rotate(270deg);
-    -o-transform: rotate(270deg);
-    -ms-transform: rotate(270deg);
-    transform: scale(-1, -1);
-    */
-      /*transform: scale(-1, 1) rotate(270deg);*/
-      transform: rotate(90deg);
+    .switch input {
+      display: none;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+    
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+    
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+    
+    input:checked+.slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+    
+    .slider.round {
+      border-radius: 34px;
+    }
+    
+    .slider.round:before {
+      border-radius: 50%;
     }
   </style>
 
   <script type="text/javascript">
-    loadData();
-    loadData2();
-    loadData3();
-    loadData4();
-    
+    function mapSwap(checkbox) {
+      document.getElementById("map").innerHTML = "";
+      document.getElementById("bars").innerHTML = "";
+      if (checkbox.checked) {
+        csvName = "/avgFundedAfterCSV3.csv";
+        loadData2(csvName);
+      }
+      else {
+        csvName = "/avgFundedBeforeCSV3.csv";
+        loadData2(csvName);
+      }
+    }
+    var csvName = "/avgFundedBeforeCSV3.csv";
     var myPaths;
     var margin = { top: 10, right: 0, bottom: 30, left: 0 };
     var svgWidth = 800 - margin.left - margin.right;
     var svgHeight = 500 - margin.top - margin.bottom;
 
-    function loadData() {
+    loadData2(csvName);
+
+    function loadData2(csvName) {
+      d3.csv(csvName, function (err, data) {
+        myData = data;
+        createChoroplethMap(myData);
+      });
+    }
+
+    function createChoroplethMap(myData) {
+
       d3.json("us-10m.json", function (json) {
         myPaths = json;
-        amounts = {}
-        for (i = 0; i < 838; i++) {
-          j = parseInt(myData[i].State_Code);
-          if (amounts[j] == null) {
-
-            amounts[j] = 0;
+        var svg = d3.select("#map")
+          .append("svg")
+          // .attr("width", function () {
+          //   return document.getElementById('map').offsetWidth;          
+          // })
+          // .attr("height", function () {
+          //   return document.getElementById('map').offsetHeigth;          
+          // })
+          .attr("width", 761)
+          .attr("height", 470)
+          .append("g")
+        //.attr("transform", "translate(" + 0 + "," + 0 + ")");
+        var projection = d3.geoAlbersUsa()
+          .translate([svgWidth / 2, svgHeight / 2])
+          .scale([1000]);
+        var path = d3.geoPath()
+          .projection(projection);
+        var states = svg.selectAll("path")
+          .data(topojson.feature(myPaths, myPaths.objects.states).features)
+          .enter()
+          .append("path")
+          .attr("d", path)
+          .attr("fill", function (d) {
+            if ((myData[parseInt(d.id) - 1]) == null) {
+              return d3.hsl(320, 1, .5);
+            }
+            else {
+              return d3.hsl(220, 1,
+                d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].Avg.replace(/,/g, "")));
+            }
           }
-          amounts[j] = parseInt(amounts[j]) + parseInt(myData[i].Amount);
-        }
-
-        createChoroplethMap();
-      });
-    }
-
-      // Load LoanStatsAfter
-    function loadData1() {
-      d3.csv("/LoanStatsAfter.csv", function (err, data) {
-        myAcceptedAfter = data;
-        d3.selectAll("#theseBars").remove();
-        createBars(null);
-      });
-    }
-    function loadData1(id) {
-      d3.csv("/LoanStatsAfter.csv", function (err, data) {
-        myAcceptedAfter = data;
-        d3.selectAll("#theseBars").remove();
-        createBars(id);
-      });
-    }
-      // Load LoanStatsBefore
-        function loadData2() {
-      d3.csv("/LoanStatsBefore.csv", function (err, data) {
-        myAcceptedBefore = data;
-        d3.selectAll("#theseBars").remove();
-        createBars(null);
-      });
-    }
-    function loadData2(id) {
-      d3.csv("/LoanStatsBefore.csv", function (err, data) {
-        myAcceptedBefore = data;
-        d3.selectAll("#theseBars").remove();
-        createBars(id);
-      });
-    }
-      // Load RejectStatsAfter
-     function loadData3() {
-      d3.csv("/RejectStatsAfter.csv", function (err, data) {
-        myRejectedAfter = data;
-        d3.selectAll("#theseBars").remove();
-        createBars(null);
-      });
-    }
-    function loadData3(id) {
-      d3.csv("/RejectStatsAfter.csv", function (err, data) {
-        myRejectedAfter = data;
-        d3.selectAll("#theseBars").remove();
-        createBars(id);
-      });
-    }
-      // Load RejectStatsBefore
-    function loadData4() {
-      d3.csv("/RejectStatsBefore.csv", function (err, data) {
-        myRejectedBefore = data;
-        d3.selectAll("#theseBars").remove();
-        createBars(null);
-      });
-    }
-    function loadData4(id) {
-      d3.csv("/RejectStatsBefore.csv", function (err, data) {
-        myRejectedBefore = data;
-        d3.selectAll("#theseBars").remove();
-        createBars(id);
-      });
-    }
-
-    function createBars(id) {
-      if (id == null) {
-        myData = myData;
-      }
-      else {
-        myData = myData.filter(function (d) {
-          if (d.State_Code == id) {
-            return d;
+          )
+          .style("stroke", "black")
+          .on("mouseover", function (d) {
+            d3.select(this)
+              .attr("fill", "gray");
+          })
+          .on("mouseleave", function (d) {
+            d3.select(this)
+              .attr("fill", function (d) {
+                if ((myData[parseInt(d.id) - 1]) == null) {
+                  return d3.hsl(320, 1, .5);
+                }
+                else {
+                  return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].Avg.replace(/,/g, "")));
+                }
+              }
+              )
+          })
+          .on("click", function (d) {
+            console.log(myData[parseInt(d.id) - 1].Avg)
           }
-        });
-      }
+          );
 
-      var margin = { top: 5, right: 0, bottom: 100, left: 80 },
-        width = 500 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
+      });
+      createBars(myData);
+    }
+
+
+    function createBars(myData) {
+      // var margin = { top: 0, right: 0, bottom: 0, left: 0 },
+      //   width = 300 - margin.left - margin.right,
+      //   height = 600 - margin.top - margin.bottom;
+      // var x = d3.scaleBand()
+      //   .range([0, width])
+      //   .padding(0.1);
+      // var y = d3.scaleLinear()
+      //   .range([height, 0]);
+      // var svg = d3.select("#bars").append("svg")
+      //   .attr("id", "theseBars")
+      //   .attr("width", width + margin.left + margin.right)
+      //   .attr("height", height + margin.top + margin.bottom)
+      //   .append("g")
+      //   .attr("transform",
+      //   "translate(" + margin.left + "," + margin.top + ")");
+      // x.domain(1,57);
+      // y.domain([0,0.2]);
+      // // append the rectangles for the bar chart
+      // svg.selectAll(".bar")
+      //   .data(myData)
+      //   .enter().append("rect")
+      //   .attr("id", "theseBars")
+      //   .attr("class", "bar")
+      //   .attr("fill", d3.hsl(250, .5, .5))
+      //   // .attr("x", function (d) { if(myData[parseInt(d.id) - 1] == null){return 50;}else{return x(myData[parseInt(d.id) - 1].rate.State_Code); }})
+      //   .attr("width", x.bandwidth())
+      //   // .attr("y", function (d) { if(myData[parseInt(d.id) - 1] == null){return 50;}else{return y(myData[parseInt(d.id) - 1].rate); }})
+      //   .attr("height", function (d) { if(myData[parseInt(d.id) - 1] == null){return 0;}else{return height - y(myData[parseInt(d.id) - 1].rate); }})
+      // // .filter(function(d){ 
+      // //   if(d.State_Code == 2){
+      // //   return d.Amount;
+      // //   }})
+      // //.append("text", function(d) { return x(d.Damage_Descp); });
+      // // add the x Axis
+      // svg.append("g")
+      //   .attr("id", "theseBars")
+      //   .attr("transform", "translate(0," + height + ")")
+      //   .call(d3.axisBottom(x))
+      //   .selectAll("text")
+      //   .style("text-anchor", "end")
+      //   .attr("dx", "-.8em")
+      //   .attr("dy", ".15em")
+      //   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      //   // .attr("transform", "rotate(275)");
+      // // add the y Axis
+      // svg.append("g")
+      //   .attr("id", "theseBars")
+      //   .call(d3.axisLeft(y));
+      // // var WIDTH = 600, HEIGHT = 400;
+      // // var COLOR_COUNTS = 9;
+      // // var SCALE = 0.7;
+      // //something = data;
+
+      // set the dimensions and margins of the graph
+      var margin = { top: 10, right: 0, bottom: 30, left: 30 },
+        width = 750 - margin.left - margin.right,
+        height = 470 - margin.top - margin.bottom;
+
+      // set the ranges
       var x = d3.scaleBand()
         .range([0, width])
         .padding(0.1);
       var y = d3.scaleLinear()
         .range([height, 0]);
+
+      // append the svg object to the body of the page
+      // append a 'group' element to 'svg'
+      // moves the 'group' element to the top left margin
       var svg = d3.select("#bars").append("svg")
-        .attr("id", "theseBars")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -154,157 +255,42 @@
         "translate(" + margin.left + "," + margin.top + ")");
 
 
-      myData.sort(function (a, b) {
-        return Number(b.Amount) - Number(a.Amount);
-      })
-      // format the data
-      myData.forEach(function (d) {
-        d.Amount = parseInt(d.Amount);
-      });
       // Scale the range of the data in the domains
-      x.domain(myData.map(function (d) { return d.Damage_Descp; }));
-      y.domain([d3.min(myData, function (d) { return d.Amount; }), d3.max(myData, function (d) { return d.Amount; })]);
-
+      //console.log(myData)
+      x.domain(
+        myData.map(
+          function (d) {
+            //console.log(d)
+            return d.State_Code;
+          }
+        )
+      );
+      y.domain([0, .2]);
 
       // append the rectangles for the bar chart
       svg.selectAll(".bar")
         .data(myData)
         .enter().append("rect")
-        .attr("id", "theseBars")
         .attr("class", "bar")
-        .attr("fill", d3.hsl(250, .5, .5))
-        .attr("x", function (d) { return x(d.Damage_Descp); })
+        .attr("x", function (d) { return x(d.State_Code); })
         .attr("width", x.bandwidth())
-        .attr("y", function (d) { return y(d.Amount); })
-        .attr("height", function (d) { return height - y(d.Amount); })
-      // .filter(function(d){ 
-      //   if(d.State_Code == 2){
-      //   return d.Amount;
-      //   }})
-      //.append("text", function(d) { return x(d.Damage_Descp); });
-      // add the x Axis
+        .attr("y", function (d) { return y(d.rate); })
+        .attr("height", function (d) { return height - y(d.rate); });
 
+      // add the x Axis
       svg.append("g")
-        .attr("id", "theseBars")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .attr("transform", "rotate(275)");
+        .call(d3.axisBottom(x));
 
       // add the y Axis
       svg.append("g")
-        .attr("id", "theseBars")
         .call(d3.axisLeft(y));
-      // var WIDTH = 600, HEIGHT = 400;
-      // var COLOR_COUNTS = 9;
-      // var SCALE = 0.7;
-      //something = data;
+
+
 
 
 
     }
-
-
-    function createChoroplethMap() {
-
-      var svg = d3.select("#map")
-        .append("svg")
-        .attr("width", svgWidth + margin.left + margin.right)
-        .attr("height", svgHeight + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-      var projection = d3.geoAlbersUsa()
-        .translate([svgWidth / 2, svgHeight / 2])
-        .scale([1000]);
-      var path = d3.geoPath()
-        .projection(projection);
-      // add states
-      var states = svg.selectAll("path")
-        .data(topojson.feature(myPaths, myPaths.objects.states).features)
-        .enter()
-        .append("path")
-        .attr("d", path)
-        //.attr("fill", d3.hsl(250, .5, .5))
-        ///////////////////WORKING ON THISSFGJSERGME
-
-        .attr("fill", function (d) {
-          //console.log()
-          return d3.hsl(220, 1,
-            //console.log(amounts[d.id]);
-            d3.scaleLinear().domain([64400, 555555555])(amounts[d.id])
-          );
-        }
-        )
-
-
-
-
-
-
-        .style("stroke", "black")
-        //.attr("outline", "black")
-
-        .on("mouseover", function (d) {
-          d3.select(this)
-            .attr("fill", "red"),
-            d3.selectAll("#theseBars").remove();
-          //createBars(d.id);
-          loadData2(d.id);
-          //eraseBarchart(d.id);
-        })
-        .on("mouseleave", function (d) {
-          d3.select(this)
-
-
-            .attr("fill", function (d) {
-              //console.log()
-              return d3.hsl(220, 1,
-                //console.log(amounts[d.id]);
-                d3.scaleLinear().domain([64400, 555555555])(amounts[d.id])
-              );
-
-
-
-            }
-            )
-
-
-
-
-          d3.selectAll("#theseBars").remove();
-          //console.log(d.id);
-          loadData2(null);
-        })
-        // .on("mouseleave", function (d) {
-        //   d3.select(this)
-        //     .attr("fill", "gray");
-        //   d3.selectAll("#theseBars").remove();
-        //   console.log(d.id);
-        //   loadData2(null);
-        // })
-        .on("click", function (d) {
-          console.log(d.id);
-          console.log(amounts[d.id]);
-
-          //createBars(d.id);
-          //d3.select("#theseBars").remove();
-          //d3.selectAll("#theseBars").remove();
-
-          //document.getElementById("bars").innerHTML = "";
-
-
-        });
-    }
-
-
-
-
-    //window.onload = loadData;
-    //window.onload = loadData2;
   </script>
 
 
@@ -314,9 +300,9 @@
 <body>
 
 
-  <div id="map" style="float:left" , width: 50%>
+  <div id="map" style="float:left" , width: 50%, height: 100%>
   </div>
-  <div id="bars" style="float:left">
+  <div id="bars" style="float:left" , width: 50%, height: 100%>
   </div>
 
 </body>
