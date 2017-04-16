@@ -2,15 +2,20 @@
 <html>
 
 <head>
+  <title>Choropleth D3</title>
   <div>
-    <title>Choropleth D3</title>
-
     <h3>Recession Toggle</h3>
     <label class="switch">
   <input type="checkbox"  onchange="mapSwap(this)">
   <div class="slider round"></div>
-
 </label>
+    <select id="category" class="icon-menu" onchange="changeBars()" style="float:right">
+      <option value="Average Interest Rate">Average Interest Rate</option>
+      <option value="Average DTI">Average DTI</option>
+    </select>
+  </div>
+  <div>
+
   </div>
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -29,6 +34,7 @@
     svg .text {
       fill: black;
     }
+    
     .switch {
       position: relative;
       display: inline-block;
@@ -50,6 +56,30 @@
       background-color: #ccc;
       -webkit-transition: .4s;
       transition: .4s;
+    }
+    
+    #map2 {
+      display: none;
+    }
+    
+    #map {
+      display: block;
+    }
+    
+    #bars {
+      display: block;
+    }
+    
+    #bars2 {
+      display: none;
+    }
+    
+    #dtiBars {
+      display: block;
+    }
+    
+    #dtiBars2 {
+      display: none;
     }
     
     .slider:before {
@@ -88,19 +118,29 @@
   </style>
 
   <script type="text/javascript">
+    var checked = false;
     function mapSwap(checkbox) {
-      document.getElementById("map").innerHTML = "";
-      document.getElementById("bars").innerHTML = "";
       if (checkbox.checked) {
-        csvName = "avgFundedAfterCSV3.csv";
-        loadData2(csvName);
+        checked = true;
+        document.getElementById("map").style.display = "none";
+        document.getElementById("bars").style.display = "none";
+        document.getElementById("map2").style.display = "block";
+        document.getElementById("bars2").style.display = "block";
+        document.getElementById("dtiBars2").style.display = "block";
+        document.getElementById("dtiBars").style.display = "none";
+
       }
       else {
-        csvName = "avgFundedBeforeCSV3.csv";
-        loadData2(csvName);
+        checked = false;
+        document.getElementById("map2").style.display = "none";
+        document.getElementById("bars2").style.display = "none";
+        document.getElementById("map").style.display = "block";
+        document.getElementById("bars").style.display = "block";
+        document.getElementById("dtiBars").style.display = "block";
+        document.getElementById("dtiBars2").style.display = "none";
       }
     }
-    var csvName = "avgFundedBeforeCSV3.csv";
+    var csvName = "CSV4.csv";
     var myPaths;
     var margin = { top: 10, right: 0, bottom: 30, left: 0 };
     var svgWidth = 800 - margin.left - margin.right;
@@ -109,33 +149,39 @@
     loadData2(csvName);
 
     function loadData2(csvName) {
+      again = false;
       d3.csv(csvName, function (err, data) {
         myData = data;
-        createChoroplethMap(myData);
+        createChoroplethMap(myData, again);
       });
     }
 
-    function createChoroplethMap(myData) {
+    function createChoroplethMap(myData, again) {
 
       d3.json("us-10m.json", function (json) {
         myPaths = json;
-        var svg = d3.select("#map")
-          .append("svg")
-          // .attr("width", function () {
-          //   return document.getElementById('map').offsetWidth;          
-          // })
-          // .attr("height", function () {
-          //   return document.getElementById('map').offsetHeigth;          
-          // })
-          .attr("width", 761)
-          .attr("height", 470)
-          .append("g")
-        //.attr("transform", "translate(" + 0 + "," + 0 + ")");
+        if (again == true) {
+          var svg = d3.select("#map2")
+            .append("svg")
+            .attr("width", 761)
+            .attr("height", 470)
+            .append("g")
+        }
+        else {
+          var svg = d3.select("#map")
+            .append("svg")
+            .attr("width", 761)
+            .attr("height", 470)
+            .append("g")
+        }
+
         var projection = d3.geoAlbersUsa()
           .translate([svgWidth / 2, svgHeight / 2])
           .scale([1000]);
         var path = d3.geoPath()
           .projection(projection);
+
+
         var states = svg.selectAll("path")
           .data(topojson.feature(myPaths, myPaths.objects.states).features)
           .enter()
@@ -145,10 +191,10 @@
             if ((myData[parseInt(d.id) - 1]) == null) {
               return d3.hsl(320, 1, .5);
             }
-            else {
-              return d3.hsl(220, 1,
-                d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].Avg.replace(/,/g, "")));
+            if (again == false) {
+              return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
             }
+            return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
           }
           )
           .style("stroke", "black")
@@ -162,75 +208,26 @@
                 if ((myData[parseInt(d.id) - 1]) == null) {
                   return d3.hsl(320, 1, .5);
                 }
-                else {
-                  return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].Avg.replace(/,/g, "")));
+                if (again == false) {
+                  return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
                 }
+                return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
               }
               )
           })
           .on("click", function (d) {
-            console.log(myData[parseInt(d.id) - 1].Avg)
+            console.log(myData[parseInt(d.id) - 1].AvgFunded)
           }
           );
 
       });
-      createBars(myData);
+      //if (again == false) {
+      createBars(myData, again);
+      //}
     }
 
 
-    function createBars(myData) {
-      // var margin = { top: 0, right: 0, bottom: 0, left: 0 },
-      //   width = 300 - margin.left - margin.right,
-      //   height = 600 - margin.top - margin.bottom;
-      // var x = d3.scaleBand()
-      //   .range([0, width])
-      //   .padding(0.1);
-      // var y = d3.scaleLinear()
-      //   .range([height, 0]);
-      // var svg = d3.select("#bars").append("svg")
-      //   .attr("id", "theseBars")
-      //   .attr("width", width + margin.left + margin.right)
-      //   .attr("height", height + margin.top + margin.bottom)
-      //   .append("g")
-      //   .attr("transform",
-      //   "translate(" + margin.left + "," + margin.top + ")");
-      // x.domain(1,57);
-      // y.domain([0,0.2]);
-      // // append the rectangles for the bar chart
-      // svg.selectAll(".bar")
-      //   .data(myData)
-      //   .enter().append("rect")
-      //   .attr("id", "theseBars")
-      //   .attr("class", "bar")
-      //   .attr("fill", d3.hsl(250, .5, .5))
-      //   // .attr("x", function (d) { if(myData[parseInt(d.id) - 1] == null){return 50;}else{return x(myData[parseInt(d.id) - 1].rate.State_Code); }})
-      //   .attr("width", x.bandwidth())
-      //   // .attr("y", function (d) { if(myData[parseInt(d.id) - 1] == null){return 50;}else{return y(myData[parseInt(d.id) - 1].rate); }})
-      //   .attr("height", function (d) { if(myData[parseInt(d.id) - 1] == null){return 0;}else{return height - y(myData[parseInt(d.id) - 1].rate); }})
-      // // .filter(function(d){ 
-      // //   if(d.State_Code == 2){
-      // //   return d.Amount;
-      // //   }})
-      // //.append("text", function(d) { return x(d.Damage_Descp); });
-      // // add the x Axis
-      // svg.append("g")
-      //   .attr("id", "theseBars")
-      //   .attr("transform", "translate(0," + height + ")")
-      //   .call(d3.axisBottom(x))
-      //   .selectAll("text")
-      //   .style("text-anchor", "end")
-      //   .attr("dx", "-.8em")
-      //   .attr("dy", ".15em")
-      //   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-      //   // .attr("transform", "rotate(275)");
-      // // add the y Axis
-      // svg.append("g")
-      //   .attr("id", "theseBars")
-      //   .call(d3.axisLeft(y));
-      // // var WIDTH = 600, HEIGHT = 400;
-      // // var COLOR_COUNTS = 9;
-      // // var SCALE = 0.7;
-      // //something = data;
+    function createBars(myData, again) {
 
       // set the dimensions and margins of the graph
       var margin = { top: 10, right: 0, bottom: 30, left: 30 },
@@ -247,12 +244,22 @@
       // append the svg object to the body of the page
       // append a 'group' element to 'svg'
       // moves the 'group' element to the top left margin
-      var svg = d3.select("#bars").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
+      if (again == false) {
+        var svg = d3.select("#bars").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+      }
+      else {
+        var svg = d3.select("#bars2").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+      }
 
 
       // Scale the range of the data in the domains
@@ -265,17 +272,18 @@
           }
         )
       );
-      y.domain([.075, .18]);
+      y.domain([0.075, .17]);
 
       // append the rectangles for the bar chart
+
       svg.selectAll(".bar")
         .data(myData)
         .enter().append("rect")
         .attr("class", "bar")
         .attr("x", function (d) { return x(d.State_Code); })
         .attr("width", x.bandwidth())
-        .attr("y", function (d) { return y(d.rate); })
-        .attr("height", function (d) { return height - y(d.rate); });
+        .attr("y", function (d) { if (again == false) { return y(d.rate); } else { return y(d.rateA) } })
+        .attr("height", function (d) { if (again == false) { return height - y(d.rate); } else { return height - y(d.rateA); } });
 
       // add the x Axis
       svg.append("g")
@@ -285,11 +293,10 @@
       // add the y Axis
       svg.append("g")
         .call(d3.axisLeft(y));
-
-
-
-
-
+      if (again == false) {
+        again = true;
+        createChoroplethMap(myData, again);
+      }
     }
   </script>
 
@@ -302,7 +309,15 @@
 
   <div id="map" style="float:left" , width: 50%, height: 100%>
   </div>
+  <div id="map2" style="float:left" , width: 50%, height: 100%>
+  </div>
   <div id="bars" style="float:left" , width: 50%, height: 100%>
+  </div>
+  <div id="bars2" style="float:left" , width: 50%, height: 100%>
+  </div>
+  <div id="dtiBars" style="float:left" , width: 50%, height: 100%>
+  </div>
+  <div id="dtiBars2" style="float:left" , width: 50%, height: 100%>
   </div>
 
 </body>
