@@ -280,6 +280,9 @@
         .data(myData)
         .enter().append("rect")
         .attr("class", "bar")
+        .attr("fill", function(d){
+          return "steelblue";
+        })
         .attr("x", function (d) { return x(d.State_Code); })
         .attr("width", x.bandwidth())
         .attr("y", function (d) { if (again == false) { return y(d.rate); } else { return y(d.rateA) } })
