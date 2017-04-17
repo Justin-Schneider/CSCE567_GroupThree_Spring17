@@ -459,7 +459,7 @@ function createChoroplethMap(myData, again) {
 
       // add the x Axis
       svg.append("g")
-        .attr("id", "theseBars").style("stroke", "white")
+        .attr("id", "theseBars").style("fill", "white")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x))
         .selectAll("text")
@@ -468,7 +468,7 @@ function createChoroplethMap(myData, again) {
         
 
       // add the y Axis
-      svg.append("g").attr("id", "theseBars").style("stroke", "white")
+      svg.append("g").attr("id", "theseBars").style("fill", "white")
         .call(d3.axisLeft(y));
       if (again == false) {
         again = true;
@@ -544,12 +544,14 @@ function createChoroplethMap(myData, again) {
       svg.append("g")
         .attr("id", "theseBars")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x)).style("stroke", "white");
+        .call(d3.axisBottom(x)).style("fill", "white")
+	.selectAll("text")
+        .attr("transform", "translate(0,7)rotate(60)");
 
       // add the y Axis
       svg.append("g")
         .attr("id", "theseBars")
-        .call(d3.axisLeft(y)).style("stroke", "white");
+        .call(d3.axisLeft(y)).style("fill", "white");
       if (again == false) {
         again = true;
         createDtiBars(myData, again);
