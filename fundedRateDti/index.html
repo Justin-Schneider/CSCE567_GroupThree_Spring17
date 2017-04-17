@@ -314,7 +314,7 @@
         var path = d3.geoPath()
           .projection(projection);
 	      
-        var tip = d3.tip()
+/*        var tip = d3.tip()
 	  .attr('class', 'd3-tip')
 	  .offset([-10, 0])
 	  .html(function(d) {
@@ -322,7 +322,7 @@
 	  })
 	
 	svg.call(tip);
-
+*/
         var states = svg.selectAll("path")
           .data(topojson.feature(myPaths, myPaths.objects.states).features)
           .enter()
@@ -343,13 +343,15 @@
           .on("mouseover", function (d) {
             d3.select(this)
               .attr("fill", "red");
-	       tip.show();
+	      // tip.show();
 	       //tooltipCreate(this);
 	      
           })
-	 .on("mouseout", function (d) {
+	
+/*	 .on("mouseout", function (d) {
              tip.hide();
 	  })
+	  */
           .on("mouseleave", function (d) {
             d3.select(this)
               .attr("fill", function (d) {
