@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
 
 <head>
   <title> Peer to Peer Loan Statistics</title>
@@ -9,10 +11,36 @@
   <div>
     <font color="darkslateblue" face="Impact"><h3>Recession Toggle: Before Recession</h3>
     <label class="switch">
-      <input type="checkbox"  onchange="mapSwap(this), <h3>Recession Toggle: After Recession</h3>">
+      <input type="checkbox"  onchange="mapSwap(this),header(this)">
   <div class="slider round"></div>
 </label>  
     
+      <div id="myDiv" class = "hidden">
+  <button class ="pure-button" id="m" value="avgReq">Average Amount Requested</button>
+</div>
+<div id="myDiv2" class = "hidden">
+  <button class ="pure-button" id="m1" value="avgReq">Average Amount Requested</button>
+</div>
+       <script type="text/javascript">
+    var checked = false;
+    function header(checkbox) {
+      if (checkbox.checked) {
+        checked = true;
+        alert(checked);
+//         document.getElementById("myDiv").style.display = "none";
+      }
+      else
+      {
+        checked == false;
+        alert(checked);
+
+
+      }
+
+
+
+</script>
+      
     <select id="category" class="icon-menu" onchange="changeBars()" style="float:right">
       <option value="Average Interest Rate">Average Interest Rate</option>
       <option value="Average DTI">Average DTI</option>
