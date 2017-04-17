@@ -384,6 +384,9 @@
         .enter().append("rect")
         .attr("id", "theseBars")
         .attr("class", "bar")
+        .attr("fill", function(d){
+          return "steelblue";
+          })
         .attr("x", function (d) { return x(d.State_Code); })
         .attr("width", x.bandwidth())
         .attr("y", function (d) { if (again == false) { return y(d.dti); } else { return y(d.dtiA) } })
