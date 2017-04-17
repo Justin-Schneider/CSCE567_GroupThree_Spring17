@@ -306,10 +306,9 @@
 	       //tooltipCreate(this);
 	      
           })
-	 .on("mouseout", function (d) {
-             tip.hide();
-	  })
+	
           .on("mouseleave", function (d) {
+	    tip.hide();
             d3.select(this)
               .attr("fill", function (d) {
 		//if ((myData[parseInt(d.id)]) == null) {
