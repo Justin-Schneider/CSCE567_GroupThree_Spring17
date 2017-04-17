@@ -6,13 +6,34 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="A chloropleth and bar-graph data visualization to demonstrate the changes in peer-to-peer lending using the recession as a point of change.">
 	<div>
-		<font color="maroon" face="Impact"><h1>Peer to Peer Loan Stats: Before vs After Recession</h1></font>
+		<font color="black" face="Impact"><h1>Peer to Peer Loan Stats: Before vs After Recession</h1></font>
   <div>
     <h3>Recession Toggle</h3>
     <label class="switch">
-  <input type="checkbox"  onchange="mapSwap(this)">
+  <input type="checkbox"  onchange="mapSwap(this), header(this)">
   <div class="slider round"></div>
 </label>
+	  
+<script type="text/javascript">
+    var checked = false;
+    function header(checkbox) {
+      if (checkbox.checked) {
+        checked = true;
+
+        document.getElementById("afterRecc").style.display = "none";
+      }
+      else
+      {
+        checked == false;
+                document.getElementById("beforeRecc").style.display = "none";
+
+      }
+
+
+
+</script>
+	  
+
     <select id="category" onchange="changeBars()" style="float:right">
       <option value="Average Interest Rate">Average Interest Rate</option>
       <option value="Average DTI">Average DTI</option>
@@ -480,9 +501,8 @@
   </div>
   <div id="map2" style="float:left" , width: 50%, height: 100%>
   </div>
-	
-  <span class='function' data-content="Some content" style='display:none' data-title="A title">Placeholder</span>
-	
+  <!--<div class="tooltip">Hover over me<span class="tooltiptext">Tooltip text</span>
+  </div> -->
   <div id="bars" style="float:left" , width: 50%, height: 100%>
   </div>
   <div id="bars2" style="float:left" , width: 50%, height: 100%>
