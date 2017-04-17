@@ -191,18 +191,17 @@
     function tooltipCreate(myData) {
     //<span class='function' data-content="Some content" data-title="A title">Function 1</span>
     //<span class='function' data-content="This tooltip doesn't have a title">Function 2</span>
-
-		<script type="text/javascript">
-		  $(document).ready(function() {
-		    Tipped.create('.function', function(element) {
-		      return {
-			title: $(element).data('State_Abbr'),
-			content: $(element).data('AvgFunded')
-		      };
-		    }, {
-		      skin: 'light'
-		    });
-  });
+   //<script type="text/javascript">
+	  $(document).ready(function() {
+	    Tipped.create('.function', function(element) {
+	      return {
+		title: $(element).data('State_Abbr'),
+		content: $(element).data('AvgFunded')
+	      };
+	    }, {
+	      skin: 'light'
+	    });
+	});
     function createChoroplethMap(myData, again) {
 
       d3.json("us-10m.json", function (json) {
