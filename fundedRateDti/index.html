@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="A chloropleth and bar-graph data visualization to demonstrate the changes in peer-to-peer lending using the recession as a point of change.">
 	<div>
-		<font color="gray" face="Impact"><h1>Peer to Peer Loan Stats: Before vs After Recession</h1></font>
+		<font color="maroon" face="Impact"><h1>Peer to Peer Loan Stats: Before vs After Recession</h1></font>
   <div>
     <h3>Recession Toggle</h3>
     <label class="switch">
@@ -119,6 +119,14 @@
     .slider.round:before {
       border-radius: 50%;
     }
+	  
+    .tooltip:hover .tooltiptext {
+    visibility: visible;
+    width: 120px;
+    bottom: 100%;
+    left: 50%; 
+    margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+    } 
   </style>
 
   <script type="text/javascript">
@@ -448,6 +456,8 @@
   <div id="map" style="float:left" , width: 50%, height: 100%>
   </div>
   <div id="map2" style="float:left" , width: 50%, height: 100%>
+  </div>
+  <div class="tooltip">Hover over me<span class="tooltiptext">Tooltip text</span>
   </div>
   <div id="bars" style="float:left" , width: 50%, height: 100%>
   </div>
