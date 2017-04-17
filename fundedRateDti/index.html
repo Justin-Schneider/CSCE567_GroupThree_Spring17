@@ -463,7 +463,7 @@ function createChoroplethMap(myData, again) {
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x))
         .selectAll("text")
-        .attr("transform", "translate(0,7)rotate(60)")
+        .attr("transform", "translate(0,7)rotate(60)").style("fill", "white")
         
         
 
