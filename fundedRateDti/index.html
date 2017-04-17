@@ -2,11 +2,11 @@
 <html>
 
 <head>
-  <title> Peer to Peer Loan Stats: During and After the Recession </title>
+  <title> Peer to Peer Loan Stats: Before and After the Recession </title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="A chloropleth and bar-graph data visualization to demonstrate the changes in peer-to-peer lending using the recession as a point of change.">
 	<div>
-		<h1>Peer to Peer Loan Stats: During vs After Recession</h1>
+		<h1>Peer to Peer Loan Stats: Before vs After Recession</h1>
   <div>
 	  <h3 id="before">During Recession</h3>
 	 <h3 id="after">After Recession</h3>
@@ -70,7 +70,7 @@
         .attr("fill", function(d) { return threshold(d[0]); });
 
     g.append("text")
-        .attr("fill", "#000")
+        .attr("fill", "#fff")
         .attr("font-weight", "bold")
         .attr("text-anchor", "start")
         .attr("y", -6)
