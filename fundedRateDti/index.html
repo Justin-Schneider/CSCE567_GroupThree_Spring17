@@ -2,9 +2,7 @@
 <html>
 
 <head>
-  <title> Peer to Peer Loan Statistics</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A chloropleth and bar-graph data visualization to demonstrate the changes in peer-to-peer lending using the recession as a point of change.">
+  <title>Choropleth D3</title>
   <div>
     <h3>Recession Toggle</h3>
     <label class="switch">
@@ -55,7 +53,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #ccc;
+      background-color: black;
       -webkit-transition: .4s;
       transition: .4s;
     }
@@ -208,9 +206,9 @@
               return d3.hsl(320, 1, .5);
             }
             if (again == false) {
-              return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
+              return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
             }
-            return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
+            return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
           }
           )
           .style("stroke", "black")
@@ -225,9 +223,9 @@
                   return d3.hsl(320, 1, .5);
                 }
                 if (again == false) {
-                  return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
+                  return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
                 }
-                return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
+                return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
               }
               )
           })
@@ -304,6 +302,9 @@
         .data(myData)
         .enter().append("rect").attr("id", "theseBars")
         .attr("class", "bar")
+        .attr("fill", function(d){
+          return "steelblue";
+        })
         .attr("x", function (d) { return x(d.State_Code); })
         .attr("width", x.bandwidth())
         .attr("y", function (d) { if (again == false) { return y(d.rate); } else { return y(d.rateA) } })
