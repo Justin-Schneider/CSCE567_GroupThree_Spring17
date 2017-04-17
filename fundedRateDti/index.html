@@ -204,8 +204,8 @@
           .append("path")
           .attr("d", path)
           .attr("fill", function (d) {
-	    if ((myData[parseInt(d.id)]) == null) {
-            //if ((myData[parseInt(d.id) - 1]) == null) {
+	    //if ((myData[parseInt(d.id)]) == null) {
+            if ((myData[parseInt(d.id) - 1]) == null) {
               return d3.hsl(320, 1, .5);
             }
             if (again == false) {
@@ -222,8 +222,8 @@
           .on("mouseleave", function (d) {
             d3.select(this)
               .attr("fill", function (d) {
-		if ((myData[parseInt(d.id)]) == null) {
-                //if ((myData[parseInt(d.id) - 1]) == null) {
+		//if ((myData[parseInt(d.id)]) == null) {
+                if ((myData[parseInt(d.id) - 1]) == null) {
                   return d3.hsl(320, 1, .5);
                 }
                 if (again == false) {
