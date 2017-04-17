@@ -16,9 +16,10 @@
 </label>
 	  
 
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
   <script src="tipped.js"></script>
   <link rel="stylesheet" type="text/css" href="tipped.css "/>
 
@@ -294,6 +295,14 @@
 
       d3.json("us-10m.json", function (json) {
         myPaths = json;
+	      
+	  var tip = d3.tip()
+	  .attr('class', 'd3-tip')
+	  .offset([-10, 0])
+	  .html(function(d) {
+	    return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
+	  }) 
+	  
         if (again == true) {
           var svg = d3.select("#map2")
             .append("svg")
@@ -315,15 +324,10 @@
         var path = d3.geoPath()
           .projection(projection);
 	      
-/*        var tip = d3.tip()
-	  .attr('class', 'd3-tip')
-	  .offset([-10, 0])
-	  .html(function(d) {
-	    return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
-	  })
+
 	
 	svg.call(tip);
-*/
+
         var states = svg.selectAll("path")
           .data(topojson.feature(myPaths, myPaths.objects.states).features)
           .enter()
@@ -344,7 +348,7 @@
           .on("mouseover", function (d) {
             d3.select(this)
               .attr("fill", "red");
-	      // tip.show();
+	      tip.show;
 	      //tooltipCreate(this);
           })
 	
@@ -353,6 +357,7 @@
 	  })
 	  */
           .on("mouseleave", function (d) {
+            tip.hide;
             d3.select(this)
               .attr("fill", function (d) {
 		//if ((myData[parseInt(d.id)]) == null) {
