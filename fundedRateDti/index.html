@@ -468,8 +468,8 @@ function createChoroplethMap(myData, again) {
         
 
       // add the y Axis
-      svg.append("g").attr("id", "theseBars").style("fill", "white")
-        .call(d3.axisLeft(y));
+      svg.append("g").attr("id", "theseBars")
+        .call(d3.axisLeft(y)).style("fill", "white");
       if (again == false) {
         again = true;
         createBars(myData, again);
@@ -544,9 +544,9 @@ function createChoroplethMap(myData, again) {
       svg.append("g")
         .attr("id", "theseBars")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x)).style("fill", "white")
+        .call(d3.axisBottom(x))
 	.selectAll("text")
-        .attr("transform", "translate(0,7)rotate(60)");
+        .attr("transform", "translate(0,7)rotate(60)").style("fill", "white");
 
       // add the y Axis
       svg.append("g")
