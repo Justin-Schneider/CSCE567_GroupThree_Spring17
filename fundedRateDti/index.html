@@ -8,31 +8,18 @@
 	<div>
 		<font color="black" face="Impact"><h1>Peer to Peer Loan Stats: Before vs After Recession</h1></font>
   <div>
-    <h3>Recession Toggle</h3>
+   <h3 id="before">Before</h3>
+    <h3 id="after">After</h3>
     <label class="switch">
-  <input type="checkbox"  onchange="mapSwap(this), header(this)">
+  <input type="checkbox"  onchange="mapSwap(this)">
   <div class="slider round"></div>
 </label>
 	  
-<script type="text/javascript">
-    var checked = false;
-    function header(checkbox) {
-      if (checkbox.checked) {
-        checked = true;
-        document.getElementById("afterRecc").style.display = "none";
-      }
-      else
-      {
-        checked == false;
-        document.getElementById("beforeRecc").style.display = "none";
-      }
-    }
-</script>
+
     <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="tipped.js"></script>
-	  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script> 
   <link rel="stylesheet" type="text/css" href="tipped.css "/>
 
     <select id="category" onchange="changeBars()" style="float:right">
@@ -111,6 +98,7 @@
       width: 60px;
       height: 34px;
     }
+	  
     
     .switch input {
       display: none;
@@ -146,6 +134,10 @@
     
     #dtiBars {
       display: block;
+    }
+	  
+     #after {
+      display: none;
     }
     
     #dtiBars2 {
@@ -196,9 +188,9 @@
     bottom: 100%;
     left: 50%; 
     margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
-    }
+    } 
 	  
-  .d3-tip {
+	  .d3-tip {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
@@ -208,7 +200,7 @@
 }
 
 /* Creates a small triangle extender for the tooltip */
-  .d3-tip:after {
+.d3-tip:after {
   box-sizing: border-box;
   display: inline;
   font-size: 10px;
@@ -232,6 +224,11 @@
         document.getElementById("bars2").style.display = "block";
         document.getElementById("dtiBars2").style.display = "block";
         document.getElementById("dtiBars").style.display = "none";
+	document.getElementById("after").style.display = "block";
+	document.getElementById("before").style.display = "none";
+
+
+	      
 
       }
       else {
@@ -242,6 +239,9 @@
         document.getElementById("bars").style.display = "block";
         document.getElementById("dtiBars").style.display = "block";
         document.getElementById("dtiBars2").style.display = "none";
+	document.getElementById("before").style.display = "block";
+	document.getElementById("after").style.display = "none";
+
       }
     }
     var csvName = "CSV4.csv";
@@ -294,14 +294,6 @@
 
       d3.json("us-10m.json", function (json) {
         myPaths = json;
-	      
-	var tip = d3.tip()
-	  .attr('class', 'd3-tip')
-	  .offset([-10, 0])
-	  .html(function(d) {
-	    return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
-	  })
-	
         if (again == true) {
           var svg = d3.select("#map2")
             .append("svg")
@@ -323,9 +315,15 @@
         var path = d3.geoPath()
           .projection(projection);
 	      
-         
+/*        var tip = d3.tip()
+	  .attr('class', 'd3-tip')
+	  .offset([-10, 0])
+	  .html(function(d) {
+	    return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
+	  })
+	
 	svg.call(tip);
-
+*/
         var states = svg.selectAll("path")
           .data(topojson.feature(myPaths, myPaths.objects.states).features)
           .enter()
@@ -346,7 +344,7 @@
           .on("mouseover", function (d) {
             d3.select(this)
               .attr("fill", "red");
-	      tip.show;
+	      // tip.show();
 	      //tooltipCreate(this);
           })
 	
@@ -355,7 +353,6 @@
 	  })
 	  */
           .on("mouseleave", function (d) {
-            tip.hide;
             d3.select(this)
               .attr("fill", function (d) {
 		//if ((myData[parseInt(d.id)]) == null) {
