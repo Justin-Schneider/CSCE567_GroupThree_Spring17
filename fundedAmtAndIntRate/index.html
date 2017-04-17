@@ -192,9 +192,9 @@
               return d3.hsl(320, 1, .5);
             }
             if (again == false) {
-              return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
+              return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
             }
-            return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
+            return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
           }
           )
           .style("stroke", "black")
@@ -209,9 +209,9 @@
                   return d3.hsl(320, 1, .5);
                 }
                 if (again == false) {
-                  return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
+                  return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
                 }
-                return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
+                return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
               }
               )
           })
