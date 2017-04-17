@@ -300,18 +300,10 @@
 	});
     }
    */
-    function createChoroplethMap(myData, again) {
+function createChoroplethMap(myData, again) {
 
       d3.json("us-10m.json", function (json) {
         myPaths = json;
-/*	      
-	  var tip = d3.tip()
-	  .attr('class', 'd3-tip')
-	  .offset([-10, 0])
-	  .html(function(d) {
-	    return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
-	  }) 
-*/	  
         if (again == true) {
           var svg = d3.select("#map2")
             .append("svg")
@@ -332,10 +324,7 @@
           .scale([1000]);
         var path = d3.geoPath()
           .projection(projection);
-	      
 
-	
-//	svg.call(tip);
 
         var states = svg.selectAll("path")
           .data(topojson.feature(myPaths, myPaths.objects.states).features)
@@ -343,48 +332,54 @@
           .append("path")
           .attr("d", path)
           .attr("fill", function (d) {
-	    //if ((myData[parseInt(d.id)]) == null) {
+            if (again == false) {
+              if ((myData[parseInt(d.id) - 1]) == null) {
+                return d3.hsl(320, 1, .5);
+              }
+              if ((myData[parseInt(d.id) - 1].AvgFunded) == "") {
+                return d3.hsl(320, 1, .5);
+              }
+              return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
+            }
             if ((myData[parseInt(d.id) - 1]) == null) {
               return d3.hsl(320, 1, .5);
             }
-            if (again == false) {
-              return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
+            if ((myData[parseInt(d.id) - 1].AvgFundedA) == "") {
+              return d3.hsl(320, 1, .5);
             }
-            return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
+            return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
           }
           )
           .style("stroke", "white")
           .on("mouseover", function (d) {
             d3.select(this)
-              .attr("fill", "red");
-	//      tip.show;
-	      //tooltipCreate(this);
+              .attr("fill", "gray");
           })
-	
-/*	 .on("mouseout", function (d) {
-             tip.hide();
-	  })
-	  */
           .on("mouseleave", function (d) {
-     //       tip.hide;
             d3.select(this)
               .attr("fill", function (d) {
-		//if ((myData[parseInt(d.id)]) == null) {
+                if (again == false) {
+                  if ((myData[parseInt(d.id) - 1]) == null) {
+                    return d3.hsl(320, 1, .5);
+                  }
+                  if ((myData[parseInt(d.id) - 1].AvgFunded) == "") {
+                    return d3.hsl(320, 1, .5);
+                  }
+                  return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
+                }
                 if ((myData[parseInt(d.id) - 1]) == null) {
                   return d3.hsl(320, 1, .5);
                 }
-                if (again == false) {
-                  return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
+                if ((myData[parseInt(d.id) - 1].AvgFundedA) == "") {
+                  return d3.hsl(320, 1, .5);
                 }
-                return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
+                return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
               }
               )
           })
           .on("click", function (d) {
-	    //console.log(myData[parseInt(d.id) - 1].AvgFunded)
-            console.log(myData[parseInt(d.id)])
-            console.log(myData[parseInt(d.id)].State_Code)
-            //console.log(myData[parseInt(d.id)].AvgFunded)
+            console.log(myData[parseInt(d.id) - 1].AvgFunded)
+            console.log(d.id)
           }
           );
 
@@ -443,8 +438,10 @@
       x.domain(
         myData.map(
           function (d) {
-            //console.log(d)
-            return d.State_Code;
+            if (d.State_Abbr2 != "") {
+              console.log(d.State_Abbr2)
+              return d.State_Abbr2;
+            }
           }
         )
       );
@@ -456,25 +453,25 @@
         .data(myData)
         .enter().append("rect").attr("id", "theseBars")
         .attr("class", "bar")
-        .attr("fill", function(d){
-          return "steelblue";
-        })
-        .attr("x", function (d) { return x(d.State_Code); })
+        .attr("x", function (d) { return x(d.State_Abbr2); })
         .attr("width", x.bandwidth())
-        .attr("y", function (d) { if (again == false) { return y(d.rate); } else { return y(d.rateA) } })
-        .attr("height", function (d) { if (again == false) { return height - y(d.rate); } else { return height - y(d.rateA); } });
+        .attr("y", function (d) { if (again == false) { return y(d.rate2); } else { return y(d.rateA2) } })
+        .attr("height", function (d) { if (again == false) { if (d.State_Abbr2 != "") { return height - y(d.rate2); } } else { if (d.State_Abbr2 != "") { return height - y(d.rateA2); } } });
 
       // add the x Axis
       svg.append("g")
         .attr("id", "theseBars")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x))
-	 .style("stroke", "white");
+        .selectAll("text")
+        .attr("transform", "translate(0,7)rotate(60)")
+        .style("stroke", "white")
+        
+        
 
       // add the y Axis
       svg.append("g").attr("id", "theseBars")
-        .call(d3.axisLeft(y))
-	.style("stroke", "white");
+        .call(d3.axisLeft(y)).style("stroke", "white");
       if (again == false) {
         again = true;
         createBars(myData, again);
@@ -527,7 +524,7 @@
         myData.map(
           function (d) {
             //console.log(d)
-            return d.State_Code;
+            return d.State_Abbr2;
           }
         )
       );
@@ -540,26 +537,21 @@
         .enter().append("rect")
         .attr("id", "theseBars")
         .attr("class", "bar")
-        .attr("fill", function(d){
-          return "steelblue";
-          })
-        .attr("x", function (d) { return x(d.State_Code); })
+        .attr("x", function (d) { return x(d.State_Abbr2); })
         .attr("width", x.bandwidth())
-        .attr("y", function (d) { if (again == false) { return y(d.dti); } else { return y(d.dtiA) } })
-        .attr("height", function (d) { if (again == false) { return height - y(d.dti); } else { return height - y(d.dtiA); } });
+        .attr("y", function (d) { if (again == false) { return y(d.dti2); } else { return y(d.dtiA2) } })
+        .attr("height", function (d) { if (again == false) { return height - y(d.dti2); } else { return height - y(d.dtiA2); } });
 
       // add the x Axis
       svg.append("g")
         .attr("id", "theseBars")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x))
-	 .style("stroke", "white");
+        .call(d3.axisBottom(x)).style("stroke", "white");
 
       // add the y Axis
       svg.append("g")
         .attr("id", "theseBars")
-        .call(d3.axisLeft(y))
-	.style("stroke", "white");
+        .call(d3.axisLeft(y)).style("stroke", "white");
       if (again == false) {
         again = true;
         createDtiBars(myData, again);
