@@ -19,18 +19,14 @@
     function header(checkbox) {
       if (checkbox.checked) {
         checked = true;
-
         document.getElementById("afterRecc").style.display = "none";
       }
       else
       {
         checked == false;
-                document.getElementById("beforeRecc").style.display = "none";
-
+        document.getElementById("beforeRecc").style.display = "none";
       }
     }
-
-
 </script>
 	  
 
@@ -38,15 +34,59 @@
       <option value="Average Interest Rate">Average Interest Rate</option>
       <option value="Average DTI">Average DTI</option>
     </select>
-  </div>
-  <div>
+    </div>
+		
+    <div style="position: fixed;" style="z-index: 1;">
+    <svg width="1000" height="1000"><g transform="translate(300,475)"></g></svg>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
 
+    var formatPercent = d3.format(".0%"),
+        formatNumber = d3.format(".0f");
+
+    var threshold = d3.scaleThreshold()
+        .domain([0.11, 0.22, 0.33, 0.50, 0.65])
+        .range(["#D5DFF3", "#A3BDF2", "#6B97F3", "#3673F0", "#023CB4", "#000000"]);
+
+    var x = d3.scaleLinear()
+        .domain([0, 1])
+        .range([0, 275]);
+
+    var xAxis = d3.axisBottom(x)
+        .tickSize(12)
+        .tickValues(threshold.domain())
+        //.tickFormat(function(d) { return d === 0.5 ? formatPercent(d) : formatNumber(100 * d); });
+
+    var g = d3.select("g").call(xAxis);
+
+    g.select(".domain")
+        .remove();
+
+    g.selectAll("rect")
+      .data(threshold.range().map(function(color) {
+        var d = threshold.invertExtent(color);
+        if (d[0] == null) d[0] = x.domain()[0];
+        if (d[1] == null) d[1] = x.domain()[1];
+        return d;
+      }))
+      .enter().insert("rect", ".tick")
+        .attr("height", 8)
+        .attr("x", function(d) { return x(d[0]); })
+        .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+        .attr("fill", function(d) { return threshold(d[0]); });
+
+    g.append("text")
+        .attr("fill", "#000")
+        .attr("font-weight", "bold")
+        .attr("text-anchor", "start")
+        .attr("y", -6)
+        .text("Percent of the Average Amount Funded");
+  </script>
   </div>
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
- <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
   <script src="tipped.js"></script>
   <link rel="stylesheet" type="text/css" href="tipped.css "/>
   <!--<svg preserveAspectRatio="xMidYMid meet"></svg>-->
@@ -307,9 +347,10 @@
 	       //tooltipCreate(this);
 	      
           })
-	
+	 .on("mouseout", function (d) {
+             tip.hide();
+	  })
           .on("mouseleave", function (d) {
-	    tip.hide();
             d3.select(this)
               .attr("fill", function (d) {
 		//if ((myData[parseInt(d.id)]) == null) {
