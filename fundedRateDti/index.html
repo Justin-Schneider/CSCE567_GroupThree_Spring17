@@ -17,7 +17,7 @@
 	  
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
-  <script src="httsp://d3js.org/d3.v3.min.js"></script>
+  <script src="https://d3js.org/d3.v3.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="d3.tip.v0.6.3.js"></script>
@@ -352,7 +352,7 @@
             return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 5000])(myData[parseInt(d.id) - 1].AvgFundedA.replace(/,/g, "")));
           }
           )
-          .style("stroke", "black")
+          .style("stroke", "white")
           .on("mouseover", function (d) {
             d3.select(this)
               .attr("fill", "red");
