@@ -195,9 +195,9 @@
     bottom: 100%;
     left: 50%; 
     margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
-    } 
+    }
 	  
-	  .d3-tip {
+  .d3-tip {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
@@ -207,7 +207,7 @@
 }
 
 /* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
+  .d3-tip:after {
   box-sizing: border-box;
   display: inline;
   font-size: 10px;
@@ -293,6 +293,14 @@
 
       d3.json("us-10m.json", function (json) {
         myPaths = json;
+	      
+	var tip = d3.tip()
+	  .attr('class', 'd3-tip')
+	  .offset([-10, 0])
+	  .html(function(d) {
+	    return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
+	  })
+	
         if (again == true) {
           var svg = d3.select("#map2")
             .append("svg")
@@ -314,15 +322,9 @@
         var path = d3.geoPath()
           .projection(projection);
 	      
-/*        var tip = d3.tip()
-	  .attr('class', 'd3-tip')
-	  .offset([-10, 0])
-	  .html(function(d) {
-	    return "<strong>Frequency:</strong> <span style='color:red'>" + d.frequency + "</span>";
-	  })
-	
+         
 	svg.call(tip);
-*/
+
         var states = svg.selectAll("path")
           .data(topojson.feature(myPaths, myPaths.objects.states).features)
           .enter()
@@ -343,7 +345,7 @@
           .on("mouseover", function (d) {
             d3.select(this)
               .attr("fill", "red");
-	      // tip.show();
+	      tip.show;
 	      //tooltipCreate(this);
           })
 	
@@ -352,6 +354,7 @@
 	  })
 	  */
           .on("mouseleave", function (d) {
+            tip.hide;
             d3.select(this)
               .attr("fill", function (d) {
 		//if ((myData[parseInt(d.id)]) == null) {
