@@ -189,7 +189,7 @@
           .attr("d", path)
           .attr("fill", function (d) {
             if ((myData[parseInt(d.id) - 1]) == null) {
-              return d3.hsl("steelblue");//return d3.hsl(320, 1, .5);
+              return d3.hsl(320, 1, .5);
             }
             if (again == false) {
               return d3.hsl(220, 1, d3.scaleLinear().domain([13000, 0])(myData[parseInt(d.id) - 1].AvgFunded.replace(/,/g, "")));
