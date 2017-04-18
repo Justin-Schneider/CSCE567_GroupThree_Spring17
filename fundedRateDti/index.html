@@ -49,6 +49,7 @@
     var xAxis = d3.axisBottom(x)
         .tickSize(12)
         .tickValues(threshold.domain())
+    .attr("fill","white")
         //.tickFormat(function(d) { return d === 0.5 ? formatPercent(d) : formatNumber(100 * d); });
 
     var g = d3.select("g").call(xAxis);
@@ -74,8 +75,7 @@
         .attr("font-weight", "bold")
         .attr("text-anchor", "start")
         .attr("y", -6)
-        .text("Percent of the Average Amount Funded")
-	.attr("fill","white");
+        .text("Percent of the Average Amount Funded");
   </script>
   </div>
 
