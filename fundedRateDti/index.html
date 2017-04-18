@@ -74,7 +74,8 @@
         .attr("font-weight", "bold")
         .attr("text-anchor", "start")
         .attr("y", -6)
-        .text("Percent of the Average Amount Funded");
+        .text("Percent of the Average Amount Funded")
+	.attr("fill","white");
   </script>
   </div>
 
@@ -451,7 +452,7 @@ function createChoroplethMap(myData, again) {
       svg.selectAll(".bar")
         .data(myData)
         .enter().append("rect").attr("id", "theseBars")
-        .attr("class", "bar").attr("fill", d3.hsl(250, .5, .5))
+        .attr("class", "bar").attr("fill", "steelblue")
         .attr("x", function (d) { return x(d.State_Abbr2); })
         .attr("width", x.bandwidth())
         .attr("y", function (d) { if (again == false) { return y(d.rate2); } else { return y(d.rateA2) } })
@@ -534,7 +535,7 @@ function createChoroplethMap(myData, again) {
         .data(myData)
         .enter().append("rect")
         .attr("id", "theseBars")
-        .attr("class", "bar").attr("fill", d3.hsl(250, .5, .5))
+        .attr("class", "bar").attr("fill", "steelblue")
         .attr("x", function (d) { return x(d.State_Abbr2); })
         .attr("width", x.bandwidth())
         .attr("y", function (d) { if (again == false) { return y(d.dti2); } else { return y(d.dtiA2) } })
