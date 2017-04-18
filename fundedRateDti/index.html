@@ -49,7 +49,6 @@
     var xAxis = d3.axisBottom(x)
         .tickSize(12)
         .tickValues(threshold.domain())
-    .attr("fill","white")
         //.tickFormat(function(d) { return d === 0.5 ? formatPercent(d) : formatNumber(100 * d); });
 
     var g = d3.select("g").call(xAxis);
